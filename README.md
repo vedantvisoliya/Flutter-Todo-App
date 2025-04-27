@@ -3,6 +3,7 @@
 
 ## Overview
 This is a 'Todo App' build in Flutter.
+Tip: Slide left the todo to delete.
 
 ## Getting Started
 ### Prerequisites
