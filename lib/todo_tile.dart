@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app/providers/todo_provider.dart';
 
-class TodoTile extends StatefulWidget {
+class TodoTile extends StatelessWidget {
 
   final String title;
   final int index;
+  final void Function(int index) removeTodo;
+  final bool Function(int index) getCheckboxValue;
+  final void Function(int index, bool newValue) setCheckboxValue;
   const TodoTile({
     super.key,
     required this.title,
     required this.index,
+    required this.removeTodo,
+    required this.getCheckboxValue,
+    required this.setCheckboxValue,
   });
 
   @override
-  State<TodoTile> createState() => _TodoTileState();
-}
-
-class _TodoTileState extends State<TodoTile> {
-  @override
   Widget build(BuildContext context) {
-    final todo = Provider.of<TodoProvider>(context, listen: false).todoList;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Dismissible(
         key: UniqueKey(),
         direction: DismissDirection.endToStart,
         onDismissed: (direction) {
-          context.read<TodoProvider>().removeTodo(widget.index);
+          removeTodo(index);
         },
         background: Container(
           alignment: Alignment.centerRight,
@@ -48,21 +46,21 @@ class _TodoTileState extends State<TodoTile> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Checkbox(
-                value: todo[widget.index][1],
+                value: getCheckboxValue(index),
                 onChanged: (bool? newValue) {
-                  setState(() {
-                    todo[widget.index][1] = newValue!;
-                  });
+                  setCheckboxValue(index, newValue!);
                 },
                 checkColor: Colors.black,
                 activeColor: Color.fromRGBO(250, 229, 61, 1),
               ),
               Text(
-                widget.title,
+                title,
                 style: TextStyle(
                   color: Colors.black,
-                  decoration: (todo[widget.index][1])  ?  TextDecoration.lineThrough : TextDecoration.none,
+                  decoration: getCheckboxValue(index) ?  TextDecoration.lineThrough : TextDecoration.none,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

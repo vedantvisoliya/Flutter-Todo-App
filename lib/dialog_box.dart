@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app/providers/todo_provider.dart';
 
 class DialogBox extends StatelessWidget {
-  const DialogBox({super.key});
+
+  final void Function(String task) addTodo;
+  const DialogBox({
+    super.key,
+    required this.addTodo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +38,7 @@ class DialogBox extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    // print(textEditingController.text);
-                    context.read<TodoProvider>().addTodo(textEditingController.text);
+                    addTodo(textEditingController.text);
                     Navigator.of(context).pop();
                   },
                   child: const Text(
